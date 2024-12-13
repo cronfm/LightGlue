@@ -52,7 +52,7 @@ def map_tensor(input_, func: Callable):
         return input_
 
 
-def batch_to_device(batch: dict, device: str = "cpu", non_blocking: bool = True):
+def batch_to_device(batch: dict, device: str = "cuda", non_blocking: bool = True):
     """Move batch (dict) to device"""
 
     def _func(tensor):
@@ -152,7 +152,7 @@ def match_pair(
     matcher,
     image0: torch.Tensor,
     image1: torch.Tensor,
-    device: str = "cpu",
+    device: str = "cuda",
     **preprocess,
 ):
     """Match a pair of images (image0, image1) with an extractor and matcher"""

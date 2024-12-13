@@ -6,7 +6,7 @@ from typing import Callable, List, Optional, Tuple
 import numpy as np
 import torch
 import torch.nn.functional as F
-from torch import nn
+from torch import nn, Tensor
 
 try:
     from flash_attn.modules.mha import FlashCrossAttention
@@ -21,7 +21,7 @@ else:
 torch.backends.cudnn.deterministic = True
 
 
-@torch.cuda.amp.custom_fwd(cast_inputs=torch.float32)
+@torch.amp.custom_fwd(cast_inputs=torch.float32,device_type='cuda')
 def normalize_keypoints(
     kpts: torch.Tensor, size: Optional[torch.Tensor] = None
 ) -> torch.Tensor:
@@ -36,7 +36,7 @@ def normalize_keypoints(
     return kpts
 
 
-def pad_to_length(x: torch.Tensor, length: int) -> Tuple[torch.Tensor]:
+def pad_to_length(x: torch.Tensor, length: int) -> tuple[Tensor, Tensor]:
     if length <= x.shape[-2]:
         return x, torch.ones_like(x[..., :1], dtype=torch.bool)
     pad = torch.ones(
